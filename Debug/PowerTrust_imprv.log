@@ -1,0 +1,23 @@
+﻿生成启动时间为 2016/11/19 星期六 19:24:51。
+     1>项目“G:\信息安全综合实验\PowerTrust_imprv\PowerTrust_imprv\PowerTrust_imprv.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         G:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /D _AFXDLL /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt DHT.cpp main.cpp
+         DHT.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+     1>g:\信息安全综合实验\powertrust_imprv\powertrust_imprv\dht.h(70): warning C4240: 使用了非标准扩展: 对“DHT::chord::node”的访问现在被定义为“public”，而以前被定义为“protected”
+                 g:\信息安全综合实验\powertrust_imprv\powertrust_imprv\dht.h(34) : 参见“DHT::chord::node”的声明
+     1>g:\信息安全综合实验\powertrust_imprv\powertrust_imprv\dht.cpp(72): warning C4018: “<”: 有符号/无符号不匹配
+     1>g:\信息安全综合实验\powertrust_imprv\powertrust_imprv\dht.cpp(102): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+     1>g:\信息安全综合实验\powertrust_imprv\powertrust_imprv\dht.cpp(261): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+         正在生成代码...
+         正在跳过...(未检测到相关更改)
+         main.cpp
+       Link:
+         G:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"G:\信息安全综合实验\PowerTrust_imprv\Debug\PowerTrust_imprv.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"G:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"G:\信息安全综合实验\PowerTrust_imprv\Debug\PowerTrust_imprv.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"G:\信息安全综合实验\PowerTrust_imprv\Debug\PowerTrust_imprv.lib" /MACHINE:X86 Debug\DHT.obj
+         Debug\main.obj
+         PowerTrust_imprv.vcxproj -> G:\信息安全综合实验\PowerTrust_imprv\Debug\PowerTrust_imprv.exe
+     1>已完成生成项目“G:\信息安全综合实验\PowerTrust_imprv\PowerTrust_imprv\PowerTrust_imprv.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.66
