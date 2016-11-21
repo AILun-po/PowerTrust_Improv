@@ -44,16 +44,18 @@ int    main()
 {   
     DHT::chord a;
 	
+	Sleep(500);
+
 	for(int i=0;i<10;i++)
 	{
 		//int id=a.generate_id();
 		a.add_node(id_list[i]);
 		std::cout<<i<<std::endl;
-		Sleep(100);
+		Sleep(500);
 	}
 
-	int x=a.get_reprsnttve_node()
-		->find_successor(321);
+	//int x=a.get_reprsnttve_node()
+	//	->find_successor(321);
 
 	
 

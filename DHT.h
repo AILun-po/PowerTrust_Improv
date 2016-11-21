@@ -55,7 +55,17 @@ namespace DHT
 		
 		int reprsnttv_node;//ID of representative node.
 	public:
-		friend VOID CALLBACK timer_proc(HWND hwnd,UINT uMsg,UINT_PTR idEvent,DWORD dwTime);
+
+		//Check if the x lies in the range
+		//(begin,end) or [begin,end] or ...
+		//allow_e1=true means [begin,
+		//allow_e2=true means ,end].
+		static bool is_lying_in
+			(int x,int begin,int end,
+			bool allow_e1,bool allow_e2,int size);
+
+		friend VOID CALLBACK timer_proc
+			(HWND hwnd,UINT uMsg,UINT_PTR idEvent,DWORD dwTime);
 
 		
 		friend DWORD CALLBACK timer_thread(PVOID pvoid);
@@ -75,12 +85,13 @@ namespace DHT
 			int id_n;
 			int m;
 			int base;
+			int size;
 
 			std::map<int,node*>& addr_map;
 			CRITICAL_SECTION& cs;
 
 		public:
-			node(int id,int m,int base,
+			node(int id,int m,int base,int size,
 				std::map<int,node*>& addr_map,
 				CRITICAL_SECTION& cs);
 			~node();

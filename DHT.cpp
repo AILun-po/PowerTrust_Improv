@@ -66,6 +66,27 @@ namespace DHT
 		return 0;   
 	}
 
+	bool chord::is_lying_in
+		(int x,int begin,int end,
+		bool allow_e1,bool allow_e2,int size)
+	{
+		if(x==flags::nil_node_id || begin==flags::nil_node_id
+			|| end==flags::nil_node_id)
+			return false;
+
+		if(begin<end)
+			return (allow_e1?x>=begin:x>begin) &&
+				(allow_e2?x<=end:x<end);
+		else if(begin>end)
+			return (allow_e1?x>=begin:x>begin) ||
+				(allow_e2?x<=end:x<end);
+		else
+			//return size<=2?true:false;
+			//return (allow_e1?x==begin:false) &&
+				//(allow_e2?x==end:false);
+			return true;
+	}
+
 
 	int chord::generate_id()
 	{
@@ -89,7 +110,7 @@ namespace DHT
 	{
 		node* addr=
 			new node(id,params.m,
-			params.base,addr_map,cs);
+			params.base,size,addr_map,cs);
 		addr_map[addr->get_id()]=addr;
 		addr->join(reprsnttv_node);
 		reprsnttv_node=addr->get_id();
@@ -103,7 +124,7 @@ namespace DHT
 		
 		node* addr=
 			new node(generate_id(),params.m,
-			params.base,addr_map,cs);
+			params.base,size,addr_map,cs);
 		addr_map[addr->get_id()]=addr;
 		reprsnttv_node=addr->get_id();
 
@@ -113,7 +134,7 @@ namespace DHT
 		CreateThread(NULL,0,timer_thread,this,0,NULL);
 	}
 
-	chord::node::node(int id,int m,int base,
+	chord::node::node(int id,int m,int base,int size,
 				std::map<int,node*>& addr_map,
 				CRITICAL_SECTION& cs)
 				:addr_map(addr_map),cs(cs)
@@ -123,6 +144,7 @@ namespace DHT
 		id_suc=id_n;
 		this->m=m;
 		this->base=base;
+		this->size=size;
 		finger=std::vector<int>(m,id_n);
 	}
 	chord::node::~node()
@@ -146,7 +168,9 @@ namespace DHT
 
 	int chord::node::find_successor_raw(int id)
 	{
-		if(id>this->id_n && id<=id_suc)
+		//If id belongs to (id_n,id_suc]
+		if(chord::is_lying_in(id,id_n,id_suc,
+			false,true,addr_map.size()))
 			return id_suc;
 		else
 		{
@@ -154,8 +178,8 @@ namespace DHT
 			if(n0!=id_n)
 				return addr_map[n0]->find_successor_raw(id);
 			else
-				return id_n>id?(id_n):(flags::nil_node_id);
-				//return id_n;
+				//return id_n>id?(id_n):(flags::nil_node_id);
+				return id_n;
 		}
 	}
 
@@ -163,7 +187,9 @@ namespace DHT
 	{
 		EnterCriticalSection(&cs);
 
-		if(id>this->id_n && id<=id_suc)
+		//If id belongs to (id_n,id_suc]
+		if(chord::is_lying_in(id,id_n,id_suc,
+			false,true,addr_map.size()))
 		{
 			LeaveCriticalSection(&cs);
 			return id_suc;
@@ -180,8 +206,8 @@ namespace DHT
 			else
 			{
 				LeaveCriticalSection(&cs);
-				return id_n>id?(id_n):(flags::nil_node_id);
-				//return id_n;
+				//return id_n>id?(id_n):(flags::nil_node_id);
+				return id_n;
 			}
 		}
 
@@ -191,7 +217,10 @@ namespace DHT
 		EnterCriticalSection(&cs);
 
 		for(int i=this->m-1;i>=0;i--)
-			if(finger[i]>id_n && finger[i]<id)
+			//If finger[i] belongs to (id_n,id)
+			if(chord::is_lying_in
+				(finger[i],id_n,id,
+				false,false,addr_map.size()))
 			{
 				LeaveCriticalSection(&cs);
 				return finger[i];
@@ -220,7 +249,8 @@ namespace DHT
 		int x=addr_map[id_suc]->id_pre;
 		
 		//Check if x belongs to (id_n,id_suc).
-		if(x>id_n && x<id_suc)
+		if(chord::is_lying_in(x,id_n,id_suc,
+			false,false,addr_map.size()))
 			id_suc=x;
 
 		addr_map[id_suc]->notify_raw(id_n);
@@ -230,8 +260,11 @@ namespace DHT
 
 	void chord::node::notify_raw(int id)
 	{
-		if(id_pre==flags::nil_node_id
-			|| (id>id_pre && id<id_n))
+		//Check if id belongs to (id_pre,id_n)
+		//or id_pre is nil
+		if(id_pre==flags::nil_node_id || 
+			chord::is_lying_in(id,id_pre,id_n,
+			false,false,addr_map.size()))
 			id_pre=id;
 	}
 
@@ -239,9 +272,11 @@ namespace DHT
 	{
 		EnterCriticalSection(&cs);
 
-		//Check if id belongs to (id_pre,id_n).
-		if( (id_pre==flags::nil_node_id)
-			|| (id>id_pre && id<id_n))
+		//Check if id belongs to (id_pre,id_n)
+		//or id_pre is nil
+		if(id_pre==flags::nil_node_id || 
+			chord::is_lying_in(id,id_pre,id_n,
+			false,false,addr_map.size()))
 			id_pre=id;
 
 		LeaveCriticalSection(&cs);
